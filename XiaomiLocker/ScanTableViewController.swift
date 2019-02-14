@@ -88,7 +88,6 @@ class ScanTableViewController: UITableViewController {
         scanBarButton.title = "Scan"
         filterBarButton.title = "Filters: ON"
         cleanBarButton.title = "Clean"
-        statusBarButton.title = "Disconnected"
         attackBarButton.title = "Attack"
     }
 
@@ -235,6 +234,11 @@ extension ScanTableViewController: CBCentralManagerDelegate {
         peripheral.discoverServices(nil)
     }
     
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        statusBarButton.title = "Disconnected"
+        selectedScooter = nil
+    }
+    
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         let alert = UIAlertController(title: "Could not connect", message: self.selectedScooter?.scooter.name, preferredStyle: .alert)
         let action = UIAlertAction(title: "OK", style: .default, handler: { (alert) in })
@@ -242,10 +246,24 @@ extension ScanTableViewController: CBCentralManagerDelegate {
         
         self.present(alert, animated: true, completion: nil)
     }
+    
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        var msg = "Everything is OK"
+        
+        if error != nil {
+            msg = error!.localizedDescription
+        }
+        
+        let alertView = UIAlertController(title: "Payload sent", message: msg, preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .default, handler: { (alert) in })
+        alertView.addAction(action)
+        self.present(alertView, animated: true, completion: nil)
+    }
 
 }
 
 extension ScanTableViewController: CBPeripheralDelegate {
+    
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         guard let services = peripheral.services else { return }
         for service in services {
@@ -257,7 +275,6 @@ extension ScanTableViewController: CBPeripheralDelegate {
         guard let characteristics = service.characteristics else { return }
         
         for characteristic in characteristics {
-            print(characteristic)
             if characteristic.uuid.uuidString.caseInsensitiveCompare(characteristicWrite) == .orderedSame {
                 self.selectedCharacteristic = characteristic
             }
