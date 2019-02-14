@@ -89,6 +89,7 @@ class ScanTableViewController: UITableViewController {
         filterBarButton.title = "Filters: ON"
         cleanBarButton.title = "Clean"
         attackBarButton.title = "Attack"
+        statusBarButton.title = "Disconnected"
     }
 
     // MARK: - Table view data source
@@ -176,10 +177,9 @@ class ScanTableViewController: UITableViewController {
     @IBAction func attackBarButtonAction(_ sender: Any) {
         if let characteristic = selectedCharacteristic {
             selectedScooter?.scooter.writeValue(payloads[selectedPayload]!, for: characteristic, type: .withoutResponse)
+            selectedScooter?.scooter.writeValue(payloads[selectedPayload]!, for: characteristic, type: .withResponse)
         }
     }
-    
-    
 }
 
 extension ScanTableViewController: CBCentralManagerDelegate {
