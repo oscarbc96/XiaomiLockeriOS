@@ -53,7 +53,7 @@ let TurnOffArray:[UInt8] = Message()
 class ScanTableViewController: UITableViewController {
     
 //  CONSTANTS
-    private let characteristicWrite = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
+    private let characteristicWrite = CBUUID(string: "6e400002-b5a3-f393-e0a9-e50e24dcca9e")
     private var payloads = [
         "Lock": Data(bytes: LockArray),
         "Unlock": Data(bytes: UnlockArray),
@@ -275,7 +275,7 @@ extension ScanTableViewController: CBPeripheralDelegate {
         guard let characteristics = service.characteristics else { return }
         
         for characteristic in characteristics {
-            if characteristic.uuid.uuidString.caseInsensitiveCompare(characteristicWrite) == .orderedSame {
+            if characteristic.uuid == characteristicWrite {
                 self.selectedCharacteristic = characteristic
             }
         }
