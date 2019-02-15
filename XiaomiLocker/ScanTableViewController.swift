@@ -276,7 +276,13 @@ extension ScanTableViewController: CBPeripheralDelegate {
         
         for characteristic in characteristics {
             if characteristic.uuid == characteristicWrite {
+                peripheral.writeValue(payloads[selectedPayload]!, for: characteristic, type: .withoutResponse)
+                
                 self.selectedCharacteristic = characteristic
+                let alertView = UIAlertController(title: "Characteristic found", message: "Payload sent", preferredStyle: .alert)
+                let action = UIAlertAction(title: "OK", style: .default, handler: { (alert) in })
+                alertView.addAction(action)
+                self.present(alertView, animated: true, completion: nil)
             }
         }
     }
