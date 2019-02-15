@@ -26,6 +26,7 @@
 		E0040C7D22155AFF00E61EA2 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		E0040C7E22155AFF00E61EA2 /* ScanTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanTableViewController.swift; sourceTree = "<group>"; };
 		E0040C8222155B4000E61EA2 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		E02DE8CB2216F4D000EC559A /* MessageTest.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MessageTest.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +61,7 @@
 		E0040C6A22155A7300E61EA2 /* XiaomiLocker */ = {
 			isa = PBXGroup;
 			children = (
+				E02DE8CB2216F4D000EC559A /* MessageTest.playground */,
 				E0040C7D22155AFF00E61EA2 /* Message.swift */,
 				E0040C7E22155AFF00E61EA2 /* ScanTableViewController.swift */,
 				E0040C6B22155A7300E61EA2 /* AppDelegate.swift */,

@@ -25,14 +25,14 @@ struct ScooterContainer: Hashable {
 let LockArray:[UInt8] = Message()
     .setDirection(newDirection: .MASTER_TO_M365)
     .setReadOrWrite(readOrWrite: .WRITE)
-    .setPosition(pos: 0x71)
+    .setPosition(pos: 0x70)
     .setPayload(singleByteToSend: 0x0001)
     .build()
 
 let UnlockArray:[UInt8] = Message()
     .setDirection(newDirection: .MASTER_TO_M365)
     .setReadOrWrite(readOrWrite: .WRITE)
-    .setPosition(pos: 0x70)
+    .setPosition(pos: 0x71)
     .setPayload(singleByteToSend: 0x0001)
     .build()
 
