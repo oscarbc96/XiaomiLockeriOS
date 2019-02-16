@@ -28,12 +28,6 @@
                                 </barButtonItem>
                                 <barButtonItem style="plain" systemItem="flexibleSpace" id="bpk-Bs-8jL"/>
                                 <barButtonItem title="Item" id="RSI-an-Kmg"/>
-                                <barButtonItem style="plain" systemItem="flexibleSpace" id="30o-tW-WAE"/>
-                                <barButtonItem title="Item" id="Zir-Vr-qN3">
-                                    <connections>
-                                        <action selector="attackBarButtonAction:" destination="H1l-4W-BIK" id="Ped-yz-Q2E"/>
-                                    </connections>
-                                </barButtonItem>
                             </items>
                         </toolbar>
                         <prototypes>
@@ -87,7 +81,6 @@
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
-                        <outlet property="attackBarButton" destination="Zir-Vr-qN3" id="1eQ-OQ-sW5"/>
                         <outlet property="cleanBarButton" destination="zGf-Ms-huI" id="a0I-bV-bx9"/>
                         <outlet property="filterBarButton" destination="AEH-lq-syd" id="vM2-hY-T60"/>
                         <outlet property="payloadBarButton" destination="ZTi-Mv-agk" id="7ZI-YR-pB7"/>

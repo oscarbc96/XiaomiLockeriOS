@@ -67,7 +67,6 @@ class ScanTableViewController: UITableViewController {
     @IBOutlet weak var filterBarButton: UIBarButtonItem!
     @IBOutlet weak var cleanBarButton: UIBarButtonItem!
     @IBOutlet weak var statusBarButton: UIBarButtonItem!
-    @IBOutlet weak var attackBarButton: UIBarButtonItem!
     
     private var centralManager: CBCentralManager!
     private var scooters = Set<ScooterContainer>()
@@ -84,11 +83,10 @@ class ScanTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        payloadBarButton.title = selectedPayload
+        payloadBarButton.title = "Payload: \(selectedPayload)"
         scanBarButton.title = "Scan"
         filterBarButton.title = "Filters: ON"
         cleanBarButton.title = "Clean"
-        attackBarButton.title = "Attack"
         statusBarButton.title = "Disconnected"
     }
 
@@ -129,7 +127,7 @@ class ScanTableViewController: UITableViewController {
     
     private func setPayload(alert: UIAlertAction!) {
         selectedPayload = alert.title!
-        self.payloadBarButton.title = selectedPayload
+        self.payloadBarButton.title = "Payload: \(selectedPayload)"
     }
     
     @IBAction func scanBarButtonAction(_ sender: Any) {
@@ -172,13 +170,6 @@ class ScanTableViewController: UITableViewController {
         selectedScooter = nil
         tableView.reloadData()
         self.title = "\(scooters.count) Devices Found"
-    }
-    
-    @IBAction func attackBarButtonAction(_ sender: Any) {
-        if let characteristic = selectedCharacteristic {
-            selectedScooter?.scooter.writeValue(payloads[selectedPayload]!, for: characteristic, type: .withoutResponse)
-            selectedScooter?.scooter.writeValue(payloads[selectedPayload]!, for: characteristic, type: .withResponse)
-        }
     }
 }
 
