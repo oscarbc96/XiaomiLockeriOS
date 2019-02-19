@@ -201,11 +201,9 @@ extension ScanTableViewController: CBCentralManagerDelegate {
             scooters.removeAll()
             tableView.reloadData()
             
-            let alertView = UIAlertController(title: "Bluetooth Unavailable", message: "Please turn bluetooth on", preferredStyle: .alert)
-            let action = UIAlertAction(title: "OK", style: .default, handler: { (alert) in })
-            alertView.addAction(action)
-            self.present(alertView, animated: true, completion: nil)
-
+            let alert = UIAlertController(title: "Bluetooth Unavailable", message: "Please turn bluetooth on", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
@@ -217,7 +215,6 @@ extension ScanTableViewController: CBCentralManagerDelegate {
                 peripheral.discoverCharacteristics(nil, for: service)
             }
         }
-        
         
         var isScooter = true
         if filtersEnabled {
@@ -249,9 +246,7 @@ extension ScanTableViewController: CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         let alert = UIAlertController(title: "Could not connect", message: self.selectedScooter?.scooter.name, preferredStyle: .alert)
-        let action = UIAlertAction(title: "OK", style: .default, handler: { (alert) in })
-        alert.addAction(action)
-        
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
     
@@ -262,10 +257,9 @@ extension ScanTableViewController: CBCentralManagerDelegate {
             msg = error!.localizedDescription
         }
         
-        let alertView = UIAlertController(title: "Payload sent", message: msg, preferredStyle: .alert)
-        let action = UIAlertAction(title: "OK", style: .default, handler: { (alert) in })
-        alertView.addAction(action)
-        self.present(alertView, animated: true, completion: nil)
+        let alert = UIAlertController(title: "Payload sent", message: msg, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 
 }
@@ -287,10 +281,9 @@ extension ScanTableViewController: CBPeripheralDelegate {
                 peripheral.writeValue(payloads[selectedPayload]!, for: characteristic, type: .withoutResponse)
                 
                 self.selectedCharacteristic = characteristic
-                let alertView = UIAlertController(title: "Characteristic found", message: "Payload sent", preferredStyle: .alert)
-                let action = UIAlertAction(title: "OK", style: .default, handler: { (alert) in })
-                alertView.addAction(action)
-                self.present(alertView, animated: true, completion: nil)
+                let alert = UIAlertController(title: "Characteristic found", message: "Payload sent", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
             }
         }
     }
