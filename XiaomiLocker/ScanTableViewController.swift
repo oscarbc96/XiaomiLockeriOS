@@ -29,14 +29,13 @@ class ScanTableViewController: UITableViewController {
 //  APP
     @IBOutlet weak var payloadBarButton: UIBarButtonItem!
     @IBOutlet weak var scanBarButton: UIBarButtonItem!
-    @IBOutlet weak var filterBarButton: UIBarButtonItem!
     @IBOutlet weak var cleanBarButton: UIBarButtonItem!
     @IBOutlet weak var statusBarButton: UIBarButtonItem!
     
     private var centralManager: CBCentralManager!
     private var scooters = Set<ScooterContainer>()
     private var selectedScooter: ScooterContainer?
-    private var filtersEnabled = true
+    private var filtersEnabled = false
     private var selectedPayload = "Lock"
     private var selectedCharacteristic: CBCharacteristic?
     
@@ -50,7 +49,6 @@ class ScanTableViewController: UITableViewController {
         
         payloadBarButton.title = "Payload: \(selectedPayload)"
         scanBarButton.title = "Scan"
-        filterBarButton.title = "Filters: ON"
         cleanBarButton.title = "Clean"
         statusBarButton.title = "Disconnected"
     }
@@ -90,32 +88,35 @@ class ScanTableViewController: UITableViewController {
         centralManager?.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
     }
     
+    private func stopScanning() {
+        self.title = "\(scooters.count) Devices Found"
+        self.scanBarButton.title = "Scan"
+        
+        centralManager?.stopScan()
+    }
+    
+    private func clean() {
+        stopScanning()
+        
+        scooters.removeAll()
+        tableView.reloadData()
+
+        if (selectedScooter != nil) {
+            centralManager.cancelPeripheralConnection((selectedScooter?.scooter)!)
+            selectedScooter = nil
+        }
+    }
+    
     private func setPayload(alert: UIAlertAction!) {
         selectedPayload = alert.title!
         self.payloadBarButton.title = "Payload: \(selectedPayload)"
     }
     
     @IBAction func scanBarButtonAction(_ sender: Any) {
-        if centralManager.isScanning{
-            centralManager?.stopScan()
-            self.title = "\(scooters.count) Devices Found"
-            self.scanBarButton.title = "Scan"
+        if centralManager.isScanning {
+            stopScanning()
         } else {
             startScanning()
-        }
-    }
-    
-    @IBAction func filterBarButtonAction(_ sender: Any) {
-        filtersEnabled = !filtersEnabled
-        
-        scooters.removeAll()
-        tableView.reloadData()
-        startScanning()
-        
-        if filtersEnabled {
-            filterBarButton.title = "Filters: ON"
-        } else {
-            filterBarButton.title = "Filters: OFF"
         }
     }
     
@@ -132,11 +133,7 @@ class ScanTableViewController: UITableViewController {
     }
     
     @IBAction func cleanBarButtonAction(_ sender: Any) {
-        statusBarButton.title = "Disconnected"
-        scooters.removeAll()
-        selectedScooter = nil
-        tableView.reloadData()
-        self.title = "\(scooters.count) Devices Found"
+        clean()
     }
 
     @IBAction func doRefresh(_ sender: UIRefreshControl) {
