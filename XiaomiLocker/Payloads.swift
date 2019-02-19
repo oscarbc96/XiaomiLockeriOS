@@ -42,9 +42,25 @@ let TurnOffArray:[UInt8] = Message()
     .setPayload(singleByteToSend: 0x01)
     .build()
 
+let TurnOnLed:[UInt8] = Message()
+    .setDirection(newDirection: .MASTER_TO_M365)
+    .setReadOrWrite(readOrWrite: .WRITE)
+    .setPosition(pos: 0x7d)
+    .setPayload(singleByteToSend: 0x02)
+    .build()
+
+let TurnOffLed:[UInt8] = Message()
+    .setDirection(newDirection: .MASTER_TO_M365)
+    .setReadOrWrite(readOrWrite: .WRITE)
+    .setPosition(pos: 0x7d)
+    .setPayload(singleByteToSend: 0x00)
+    .build()
+
 let payloads = [
     "Lock": Data(bytes: LockArray),
     "Unlock": Data(bytes: UnlockArray),
     "Change Password": Data(bytes: ChangePassArray),
-    "Turn Off": Data(bytes: TurnOffArray)
+    "Turn Off": Data(bytes: TurnOffArray),
+    "Turn On Led": Data(bytes: TurnOnLed),
+    "Turn Off Led": Data(bytes: TurnOffLed)
 ]

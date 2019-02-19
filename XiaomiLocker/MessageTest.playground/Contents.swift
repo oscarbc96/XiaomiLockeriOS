@@ -1,5 +1,12 @@
 import UIKit
 
+func printPayload(payload: [UInt8]) {
+    var str = ""
+    for number in payload {
+        str += String(format:"%02X", number)
+    }
+    print(str)
+}
 enum MessageCommands: UInt8 {
     case MASTER_TO_M365 = 0x20
     case MASTER_TO_BATTERY = 0x22
@@ -43,13 +50,13 @@ class Message {
     }
     
     func setPayload(multipleBytesToSend: [UInt8]) -> Message {
-        for byte in multipleBytesToSend {
-            payload.append(byte)
-        }
-        checksum += 3
-        for byte in multipleBytesToSend {
-            checksum += Int(byte)
-        }
+        payload.append(contentsOf: multipleBytesToSend)
+        
+        checksum += multipleBytesToSend.count + 2
+        payload.forEach({
+            checksum += Int($0)
+        })
+        
         return self
     }
     
@@ -87,6 +94,11 @@ class Message {
     }
 }
 
+func randomString(length: Int) -> String {
+    let numbers = "0123456789"
+    return String((0...length-1).map{ _ in numbers.randomElement()! })
+}
+
 let LockArray:[UInt8] = Message()
     .setDirection(newDirection: .MASTER_TO_M365)
     .setReadOrWrite(readOrWrite: .WRITE)
@@ -103,11 +115,6 @@ let UnlockArray:[UInt8] = Message()
     .build()
 print(UnlockArray)
 
-func randomString(length: Int) -> String {
-    let numbers = "0123456789"
-    return String((0...length-1).map{ _ in numbers.randomElement()! })
-}
-
 let ChangePassArray:[UInt8] = Message()
     .setDirection(newDirection: .MASTER_TO_M365)
     .setReadOrWrite(readOrWrite: .WRITE)
@@ -123,3 +130,21 @@ let TurnOffArray:[UInt8] = Message()
     .setPayload(singleByteToSend: 0x01)
     .build()
 print(TurnOffArray)
+
+let TurnOnLed:[UInt8] = Message()
+    .setDirection(newDirection: .MASTER_TO_M365)
+    .setReadOrWrite(readOrWrite: .WRITE)
+    .setPosition(pos: 0x7d)
+    .setPayload(singleByteToSend: 0x02)
+    .build()
+print("55aa0420037d020059ff")
+printPayload(payload: TurnOnLed)
+
+let TurnOffLed:[UInt8] = Message()
+    .setDirection(newDirection: .MASTER_TO_M365)
+    .setReadOrWrite(readOrWrite: .WRITE)
+    .setPosition(pos: 0x7d)
+    .setPayload(singleByteToSend: 0x00)
+    .build()
+print("55aa0420037d00005bff")
+printPayload(payload: TurnOffLed)
