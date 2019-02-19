@@ -42,6 +42,17 @@ class Message {
         return self
     }
     
+    func setPayload(multipleBytesToSend: [UInt8]) -> Message {
+        for byte in multipleBytesToSend {
+            payload.append(byte)
+        }
+        checksum += 3
+        for byte in multipleBytesToSend {
+            checksum += Int(byte)
+        }
+        return self
+    }
+    
     private func setupHeaders() {
         message.append(0x55)
         message.append(0xAA)
@@ -92,13 +103,18 @@ let UnlockArray:[UInt8] = Message()
     .build()
 print(UnlockArray)
 
-let TurnOnLightsArray:[UInt8] = Message()
+func randomString(length: Int) -> String {
+    let numbers = "0123456789"
+    return String((0...length-1).map{ _ in numbers.randomElement()! })
+}
+
+let ChangePassArray:[UInt8] = Message()
     .setDirection(newDirection: .MASTER_TO_M365)
     .setReadOrWrite(readOrWrite: .WRITE)
-    .setPosition(pos: 0x7d)
-    .setPayload(singleByteToSend: 0x0001)
+    .setPosition(pos: 0x79)
+    .setPayload(multipleBytesToSend: randomString(length: 6).utf8.map{UInt8($0)})
     .build()
-print(TurnOnLightsArray)
+print(ChangePassArray)
 
 let TurnOffArray:[UInt8] = Message()
     .setDirection(newDirection: .MASTER_TO_M365)

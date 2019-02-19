@@ -21,6 +21,11 @@ struct ScooterContainer: Hashable {
     }
 }
 
+func randomString(length: Int) -> String {
+    let numbers = "0123456789"
+    return String((0...length-1).map{ _ in numbers.randomElement()! })
+}
+
 //  PAYLOADS
 let LockArray:[UInt8] = Message()
     .setDirection(newDirection: .MASTER_TO_M365)
@@ -36,11 +41,11 @@ let UnlockArray:[UInt8] = Message()
     .setPayload(singleByteToSend: 0x0001)
     .build()
 
-let TurnOnLightsArray:[UInt8] = Message()
+let ChangePassArray:[UInt8] = Message()
     .setDirection(newDirection: .MASTER_TO_M365)
     .setReadOrWrite(readOrWrite: .WRITE)
-    .setPosition(pos: 0x7d)
-    .setPayload(singleByteToSend: 0x0001)
+    .setPosition(pos: 0x79)
+    .setPayload(multipleBytesToSend: randomString(length: 6).utf8.map{UInt8($0)})
     .build()
 
 let TurnOffArray:[UInt8] = Message()
@@ -57,8 +62,8 @@ class ScanTableViewController: UITableViewController {
     private var payloads = [
         "Lock": Data(bytes: LockArray),
         "Unlock": Data(bytes: UnlockArray),
-        "TurnOnLights": Data(bytes: TurnOnLightsArray),
-        "TurnOff": Data(bytes: TurnOffArray)
+        "Change Password": Data(bytes: ChangePassArray),
+        "Turn Off": Data(bytes: TurnOffArray)
     ]
     
 //  APP
@@ -160,6 +165,8 @@ class ScanTableViewController: UITableViewController {
         for (name, _) in payloads {
              alert.addAction(UIAlertAction(title: name, style: .default, handler: setPayload))
         }
+
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 
         self.present(alert, animated: true, completion: nil)
     }
