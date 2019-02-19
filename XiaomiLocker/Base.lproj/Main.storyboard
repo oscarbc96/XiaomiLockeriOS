@@ -80,6 +80,12 @@
                             </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
+                    <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="SkF-YA-EKd">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <connections>
+                            <action selector="doRefresh:" destination="H1l-4W-BIK" eventType="valueChanged" id="IsB-YA-vf1"/>
+                        </connections>
+                    </refreshControl>
                     <connections>
                         <outlet property="cleanBarButton" destination="zGf-Ms-huI" id="a0I-bV-bx9"/>
                         <outlet property="filterBarButton" destination="AEH-lq-syd" id="vM2-hY-T60"/>
