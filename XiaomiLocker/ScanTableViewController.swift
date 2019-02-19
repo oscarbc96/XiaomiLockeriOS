@@ -21,50 +21,10 @@ struct ScooterContainer: Hashable {
     }
 }
 
-func randomString(length: Int) -> String {
-    let numbers = "0123456789"
-    return String((0...length-1).map{ _ in numbers.randomElement()! })
-}
-
-//  PAYLOADS
-let LockArray:[UInt8] = Message()
-    .setDirection(newDirection: .MASTER_TO_M365)
-    .setReadOrWrite(readOrWrite: .WRITE)
-    .setPosition(pos: 0x70)
-    .setPayload(singleByteToSend: 0x0001)
-    .build()
-
-let UnlockArray:[UInt8] = Message()
-    .setDirection(newDirection: .MASTER_TO_M365)
-    .setReadOrWrite(readOrWrite: .WRITE)
-    .setPosition(pos: 0x71)
-    .setPayload(singleByteToSend: 0x0001)
-    .build()
-
-let ChangePassArray:[UInt8] = Message()
-    .setDirection(newDirection: .MASTER_TO_M365)
-    .setReadOrWrite(readOrWrite: .WRITE)
-    .setPosition(pos: 0x79)
-    .setPayload(multipleBytesToSend: randomString(length: 6).utf8.map{UInt8($0)})
-    .build()
-
-let TurnOffArray:[UInt8] = Message()
-    .setDirection(newDirection: .MASTER_TO_M365)
-    .setReadOrWrite(readOrWrite: .WRITE)
-    .setPosition(pos: 0x79)
-    .setPayload(singleByteToSend: 0x01)
-    .build()
-
 class ScanTableViewController: UITableViewController {
     
 //  CONSTANTS
     private let characteristicWrite = CBUUID(string: "6e400002-b5a3-f393-e0a9-e50e24dcca9e")
-    private var payloads = [
-        "Lock": Data(bytes: LockArray),
-        "Unlock": Data(bytes: UnlockArray),
-        "Change Password": Data(bytes: ChangePassArray),
-        "Turn Off": Data(bytes: TurnOffArray)
-    ]
     
 //  APP
     @IBOutlet weak var payloadBarButton: UIBarButtonItem!
