@@ -140,7 +140,7 @@ class ScanTableViewController: UITableViewController {
             centralManager?.stopScan()
             self.title = "\(scooters.count) Devices Found"
             self.scanBarButton.title = "Scan"
-        }else{
+        } else {
             startScanning()
         }
     }
@@ -177,6 +177,16 @@ class ScanTableViewController: UITableViewController {
         selectedScooter = nil
         tableView.reloadData()
         self.title = "\(scooters.count) Devices Found"
+    }
+
+    @IBAction func doRefresh(_ sender: UIRefreshControl) {
+        sender.beginRefreshing()
+        if centralManager.isScanning {
+            centralManager?.stopScan()
+        }
+        sender.attributedTitle = NSAttributedString(string: "Scanning...")
+        startScanning()
+        sender.endRefreshing()
     }
 }
 
