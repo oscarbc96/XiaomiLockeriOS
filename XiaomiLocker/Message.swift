@@ -50,6 +50,17 @@ class Message {
         return self
     }
     
+    func setPayload(multipleBytesToSend: [UInt8]) -> Message {
+        for byte in multipleBytesToSend {
+            payload.append(byte)
+        }
+        checksum += 3
+        for byte in multipleBytesToSend {
+            checksum += Int(byte)
+        }
+        return self
+    }
+    
     private func setupHeaders() {
         message.append(0x55)
         message.append(0xAA)
