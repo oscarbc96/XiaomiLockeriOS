@@ -63,13 +63,9 @@ class ScanTableViewController: UITableViewController {
         cleanBarButton.title = "Clean"
         statusBarButton.title = "Disconnected"
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updateTimers), userInfo: nil, repeats: true)
-    }
-    
+  
     override func viewWillDisappear(_ animated: Bool) {
-        timer.invalidate()
+        stopTimer()
     }
 
     // MARK: - Table view data source
@@ -105,6 +101,8 @@ class ScanTableViewController: UITableViewController {
         self.scanBarButton.title = "Stop"
         
         centralManager?.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
+        
+        startTimer()
     }
     
     private func stopScanning() {
@@ -112,6 +110,8 @@ class ScanTableViewController: UITableViewController {
         self.scanBarButton.title = "Scan"
         
         centralManager?.stopScan()
+        
+        stopTimer()
     }
     
     private func clean() {
@@ -126,6 +126,14 @@ class ScanTableViewController: UITableViewController {
         }
         
         self.title = "\(scooters.count) Devices Found"
+    }
+    
+    private func startTimer() {
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updateTimers), userInfo: nil, repeats: true)
+    }
+    
+    private func stopTimer() {
+        timer.invalidate()
     }
     
     @objc func updateTimers() {
