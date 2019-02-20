@@ -15,17 +15,8 @@ struct ScooterContainer: Hashable {
     let lastRSSI: NSNumber
     let isConnectable: Bool
     
-    var time: Int8
     var hashValue: Int { return scooter.hashValue }
-    
-    mutating func decreaseTimer() {
-        self.time -= 1
-    }
-    
-    mutating func resetTimer() {
-        self.time = 5
-    }
-    
+
     static func == (lhs: ScooterContainer, rhs: ScooterContainer) -> Bool {
         return lhs.scooter == rhs.scooter
     }
@@ -48,7 +39,6 @@ class ScanTableViewController: UITableViewController {
     private var filtersEnabled = false
     private var selectedPayload = "Lock"
     private var selectedRow: IndexPath?
-    private var timer: Timer!
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -64,10 +54,6 @@ class ScanTableViewController: UITableViewController {
         statusBarButton.title = "Disconnected"
     }
   
-    override func viewWillDisappear(_ animated: Bool) {
-        stopTimer()
-    }
-
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -101,8 +87,6 @@ class ScanTableViewController: UITableViewController {
         self.scanBarButton.title = "Stop"
         
         centralManager?.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
-        
-        startTimer()
     }
     
     private func stopScanning() {
@@ -110,8 +94,6 @@ class ScanTableViewController: UITableViewController {
         self.scanBarButton.title = "Scan"
         
         centralManager?.stopScan()
-        
-        stopTimer()
     }
     
     private func clean() {
@@ -126,30 +108,6 @@ class ScanTableViewController: UITableViewController {
         }
         
         self.title = "\(scooters.count) Devices Found"
-    }
-    
-    private func startTimer() {
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updateTimers), userInfo: nil, repeats: true)
-    }
-    
-    private func stopTimer() {
-        timer.invalidate()
-    }
-    
-    @objc func updateTimers() {
-        var aux = Set<ScooterContainer>()
-        
-        for idx in scooters.indices{
-            var scooterContainer = scooters[idx]
-            scooterContainer.decreaseTimer()
-            if scooterContainer.time > 0 {
-                aux.insert(scooterContainer)
-            }
-        }
-        
-        scooters = aux
-        
-        tableView.reloadData()
     }
     
     private func setPayload(alert: UIAlertAction!) {
@@ -224,22 +182,12 @@ extension ScanTableViewController: CBCentralManagerDelegate {
         }
         
         if isScooter {
-            let scooterContainer = ScooterContainer(scooter: peripheral, lastRSSI: RSSI, isConnectable: isConnectable, time: 5)
+            let scooterContainer = ScooterContainer(scooter: peripheral, lastRSSI: RSSI, isConnectable: isConnectable)
             
             if !scooters.contains(scooterContainer) {
                 scooters.insert(scooterContainer)
                 tableView.reloadData()
                 UIDevice.vibrate()
-            } else {
-                var aux = Set<ScooterContainer>()
-                
-                for idx in scooters.indices{
-                    var scooterContainer = scooters[idx]
-                    scooterContainer.resetTimer()
-                    aux.insert(scooterContainer)
-                }
-                
-                scooters = aux
             }
         }
     }
