@@ -51,13 +51,13 @@ class Message {
     }
     
     func setPayload(multipleBytesToSend: [UInt8]) -> Message {
-        for byte in multipleBytesToSend {
-            payload.append(byte)
-        }
-        checksum += 3
-        for byte in multipleBytesToSend {
-            checksum += Int(byte)
-        }
+        payload.append(contentsOf: multipleBytesToSend)
+        
+        checksum += multipleBytesToSend.count + 2
+        payload.forEach({
+            checksum += Int($0)
+        })
+        
         return self
     }
     
