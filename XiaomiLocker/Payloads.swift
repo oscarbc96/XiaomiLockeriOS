@@ -46,14 +46,14 @@ let TurnOnLed:[UInt8] = Message()
     .setDirection(newDirection: .MASTER_TO_M365)
     .setReadOrWrite(readOrWrite: .WRITE)
     .setPosition(pos: 0x7d)
-    .setPayload(singleByteToSend: 0x02)
+    .setPayload(multipleBytesToSend: [0x02, 0x00])
     .build()
 
 let TurnOffLed:[UInt8] = Message()
     .setDirection(newDirection: .MASTER_TO_M365)
     .setReadOrWrite(readOrWrite: .WRITE)
     .setPosition(pos: 0x7d)
-    .setPayload(singleByteToSend: 0x00)
+    .setPayload(multipleBytesToSend: [0x00, 0x00])
     .build()
 
 let payloads = [
