@@ -31,7 +31,7 @@ let UnlockArray:[UInt8] = Message()
 let ChangePassArray:[UInt8] = Message()
     .setDirection(newDirection: .MASTER_TO_M365)
     .setReadOrWrite(readOrWrite: .WRITE)
-    .setPosition(pos: 0x79)
+    .setPosition(pos: 0x17)
     .setPayload(multipleBytesToSend: randomString(length: 6).utf8.map{UInt8($0)})
     .build()
 
