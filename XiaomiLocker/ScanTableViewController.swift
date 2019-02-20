@@ -15,8 +15,17 @@ struct ScooterContainer: Hashable {
     let lastRSSI: NSNumber
     let isConnectable: Bool
     
+    var time: Int8
     var hashValue: Int { return scooter.hashValue }
-
+    
+    mutating func decreaseTimer() {
+        self.time -= 1
+    }
+    
+    mutating func resetTimer() {
+        self.time = 15
+    }
+    
     static func == (lhs: ScooterContainer, rhs: ScooterContainer) -> Bool {
         return lhs.scooter == rhs.scooter
     }
@@ -37,6 +46,7 @@ class ScanTableViewController: UITableViewController {
     private var scooters = Set<ScooterContainer>()
     private var selectedScooter: ScooterContainer?
     private var selectedPayload = "Lock"
+    private var timer: Timer!
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -179,7 +189,7 @@ extension ScanTableViewController: CBCentralManagerDelegate {
         }
         
         if isScooter {
-            let scooterContainer = ScooterContainer(scooter: peripheral, lastRSSI: RSSI, isConnectable: isConnectable)
+            let scooterContainer = ScooterContainer(scooter: peripheral, lastRSSI: RSSI, isConnectable: isConnectable, time: 15)
             
             if !scooters.contains(scooterContainer) {
                 scooters.insert(scooterContainer)
