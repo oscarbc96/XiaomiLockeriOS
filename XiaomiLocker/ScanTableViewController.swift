@@ -83,7 +83,7 @@ class ScanTableViewController: UITableViewController {
         self.title = "Scanning..."
         self.scanBarButton.title = "Stop"
         
-        centralManager?.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
+        centralManager?.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
     }
     
     private func stopScanning() {
