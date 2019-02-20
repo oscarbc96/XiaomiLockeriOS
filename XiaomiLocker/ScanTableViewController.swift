@@ -122,11 +122,14 @@ class ScanTableViewController: UITableViewController {
     }
     
     private func startTimer() {
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updateTimers), userInfo: nil, repeats: true)
+        if timer == nil {
+            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updateTimers), userInfo: nil, repeats: true)
+        }
     }
     
     private func stopTimer() {
         timer.invalidate()
+        timer = nil
     }
     
     @objc func updateTimers() {
@@ -223,6 +226,16 @@ extension ScanTableViewController: CBCentralManagerDelegate {
                 scooters.insert(scooterContainer)
                 tableView.reloadData()
                 UIDevice.vibrate()
+            } else {
+                var aux = Set<ScooterContainer>()
+                
+                for idx in scooters.indices{
+                    var scooterContainer = scooters[idx]
+                    scooterContainer.resetTimer()
+                    aux.insert(scooterContainer)
+                }
+                
+                scooters = aux
             }
         }
     }
