@@ -23,7 +23,7 @@ struct ScooterContainer: Hashable {
     }
     
     mutating func resetTimer() {
-        self.time = 15
+        self.time = 5
     }
     
     static func == (lhs: ScooterContainer, rhs: ScooterContainer) -> Bool {
@@ -224,7 +224,7 @@ extension ScanTableViewController: CBCentralManagerDelegate {
         }
         
         if isScooter {
-            let scooterContainer = ScooterContainer(scooter: peripheral, lastRSSI: RSSI, isConnectable: isConnectable, time: 15)
+            let scooterContainer = ScooterContainer(scooter: peripheral, lastRSSI: RSSI, isConnectable: isConnectable, time: 5)
             
             if !scooters.contains(scooterContainer) {
                 scooters.insert(scooterContainer)
