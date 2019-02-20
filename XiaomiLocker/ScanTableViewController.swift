@@ -37,7 +37,6 @@ class ScanTableViewController: UITableViewController {
     private var scooters = Set<ScooterContainer>()
     private var selectedScooter: ScooterContainer?
     private var selectedPayload = "Lock"
-    private var selectedRow: IndexPath?
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -75,7 +74,6 @@ class ScanTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedRow = indexPath
         selectedScooter = Array(scooters)[indexPath.row]
         statusBarButton.title = "Connecting..."
         centralManager.connect((selectedScooter?.scooter)!, options: nil)
@@ -247,9 +245,6 @@ extension ScanTableViewController: CBPeripheralDelegate {
                 // Disconnect
                 centralManager.cancelPeripheralConnection(peripheral)
                 selectedScooter = nil
-                
-                // Deselect row
-                tableView.deselectRow(at: selectedRow!, animated: false)
                 
                 break
             }
