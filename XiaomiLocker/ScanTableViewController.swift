@@ -94,6 +94,8 @@ class ScanTableViewController: UITableViewController {
         self.scanBarButton.title = "Stop"
         
         centralManager?.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
+
+        startTimer()
     }
     
     private func stopScanning() {
@@ -101,6 +103,8 @@ class ScanTableViewController: UITableViewController {
         self.scanBarButton.title = "Scan"
         
         centralManager?.stopScan()
+        
+        stopTimer()
     }
     
     private func clean() {
@@ -115,6 +119,30 @@ class ScanTableViewController: UITableViewController {
         }
         
         self.title = "\(scooters.count) Devices Found"
+    }
+    
+    private func startTimer() {
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updateTimers), userInfo: nil, repeats: true)
+    }
+    
+    private func stopTimer() {
+        timer.invalidate()
+    }
+    
+    @objc func updateTimers() {
+        var aux = Set<ScooterContainer>()
+        
+        for idx in scooters.indices{
+            var scooterContainer = scooters[idx]
+            scooterContainer.decreaseTimer()
+            if scooterContainer.time > 0 {
+                aux.insert(scooterContainer)
+            }
+        }
+        
+        scooters = aux
+        
+        tableView.reloadData()
     }
     
     private func setPayload(alert: UIAlertAction!) {
