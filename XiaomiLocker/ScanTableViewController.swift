@@ -36,7 +36,6 @@ class ScanTableViewController: UITableViewController {
     private var centralManager: CBCentralManager!
     private var scooters = Set<ScooterContainer>()
     private var selectedScooter: ScooterContainer?
-    private var filtersEnabled = false
     private var selectedPayload = "Lock"
     private var selectedRow: IndexPath?
     
