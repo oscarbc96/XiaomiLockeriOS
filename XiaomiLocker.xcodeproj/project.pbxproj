@@ -14,6 +14,7 @@
 		E0040C7F22155B0000E61EA2 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0040C7D22155AFF00E61EA2 /* Message.swift */; };
 		E0040C8022155B0000E61EA2 /* ScanTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0040C7E22155AFF00E61EA2 /* ScanTableViewController.swift */; };
 		E0040C8322155B4000E61EA2 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0040C8222155B4000E61EA2 /* CoreBluetooth.framework */; };
+		E0E36138221C74D1008581F1 /* Payloads.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E36137221C74D1008581F1 /* Payloads.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		E0040C7E22155AFF00E61EA2 /* ScanTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanTableViewController.swift; sourceTree = "<group>"; };
 		E0040C8222155B4000E61EA2 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		E02DE8CB2216F4D000EC559A /* MessageTest.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MessageTest.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		E0E36137221C74D1008581F1 /* Payloads.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payloads.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,10 +63,11 @@
 		E0040C6A22155A7300E61EA2 /* XiaomiLocker */ = {
 			isa = PBXGroup;
 			children = (
-				E02DE8CB2216F4D000EC559A /* MessageTest.playground */,
-				E0040C7D22155AFF00E61EA2 /* Message.swift */,
-				E0040C7E22155AFF00E61EA2 /* ScanTableViewController.swift */,
 				E0040C6B22155A7300E61EA2 /* AppDelegate.swift */,
+				E0040C7D22155AFF00E61EA2 /* Message.swift */,
+				E02DE8CB2216F4D000EC559A /* MessageTest.playground */,
+				E0E36137221C74D1008581F1 /* Payloads.swift */,
+				E0040C7E22155AFF00E61EA2 /* ScanTableViewController.swift */,
 				E0040C6F22155A7300E61EA2 /* Main.storyboard */,
 				E0040C7222155A7400E61EA2 /* Assets.xcassets */,
 				E0040C7422155A7400E61EA2 /* LaunchScreen.storyboard */,
@@ -154,6 +157,7 @@
 			files = (
 				E0040C6C22155A7300E61EA2 /* AppDelegate.swift in Sources */,
 				E0040C7F22155B0000E61EA2 /* Message.swift in Sources */,
+				E0E36138221C74D1008581F1 /* Payloads.swift in Sources */,
 				E0040C8022155B0000E61EA2 /* ScanTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

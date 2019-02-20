@@ -1,5 +1,12 @@
 import UIKit
 
+func printPayload(payload: [UInt8]) {
+    var str = "  Output: "
+    for number in payload {
+        str += String(format:"%02X", number)
+    }
+    print(str)
+}
 enum MessageCommands: UInt8 {
     case MASTER_TO_M365 = 0x20
     case MASTER_TO_BATTERY = 0x22
@@ -43,13 +50,13 @@ class Message {
     }
     
     func setPayload(multipleBytesToSend: [UInt8]) -> Message {
-        for byte in multipleBytesToSend {
-            payload.append(byte)
-        }
-        checksum += 3
-        for byte in multipleBytesToSend {
-            checksum += Int(byte)
-        }
+        payload.append(contentsOf: multipleBytesToSend)
+        
+        checksum += multipleBytesToSend.count + 2
+        payload.forEach({
+            checksum += Int($0)
+        })
+        
         return self
     }
     
@@ -93,7 +100,8 @@ let LockArray:[UInt8] = Message()
     .setPosition(pos: 0x71)
     .setPayload(singleByteToSend: 0x0001)
     .build()
-print(LockArray)
+print("--")
+printPayload(payload: LockArray)
 
 let UnlockArray:[UInt8] = Message()
     .setDirection(newDirection: .MASTER_TO_M365)
@@ -101,20 +109,18 @@ let UnlockArray:[UInt8] = Message()
     .setPosition(pos: 0x70)
     .setPayload(singleByteToSend: 0x0001)
     .build()
-print(UnlockArray)
-
-func randomString(length: Int) -> String {
-    let numbers = "0123456789"
-    return String((0...length-1).map{ _ in numbers.randomElement()! })
-}
+print("--")
+printPayload(payload: UnlockArray)
 
 let ChangePassArray:[UInt8] = Message()
     .setDirection(newDirection: .MASTER_TO_M365)
     .setReadOrWrite(readOrWrite: .WRITE)
     .setPosition(pos: 0x79)
-    .setPayload(multipleBytesToSend: randomString(length: 6).utf8.map{UInt8($0)})
+    .setPayload(multipleBytesToSend: "932046".utf8.map{UInt8($0)})
     .build()
-print(ChangePassArray)
+print("--")
+print("Expected: 55aa0820037939333230343623fe")
+printPayload(payload: ChangePassArray)
 
 let TurnOffArray:[UInt8] = Message()
     .setDirection(newDirection: .MASTER_TO_M365)
@@ -122,4 +128,25 @@ let TurnOffArray:[UInt8] = Message()
     .setPosition(pos: 0x79)
     .setPayload(singleByteToSend: 0x01)
     .build()
-print(TurnOffArray)
+print("--")
+printPayload(payload: TurnOffArray)
+
+let TurnOnLed:[UInt8] = Message()
+    .setDirection(newDirection: .MASTER_TO_M365)
+    .setReadOrWrite(readOrWrite: .WRITE)
+    .setPosition(pos: 0x7d)
+    .setPayload(multipleBytesToSend: [0x02, 0x00])
+    .build()
+print("--")
+print("Expected: 55aa0420037d020059ff")
+printPayload(payload: TurnOnLed)
+
+let TurnOffLed:[UInt8] = Message()
+    .setDirection(newDirection: .MASTER_TO_M365)
+    .setReadOrWrite(readOrWrite: .WRITE)
+    .setPosition(pos: 0x7d)
+    .setPayload(multipleBytesToSend: [0x00, 0x00])
+    .build()
+print("--")
+print("Expected: 55aa0420037d00005bff")
+printPayload(payload: TurnOffLed)
