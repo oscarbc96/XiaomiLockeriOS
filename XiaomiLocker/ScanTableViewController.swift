@@ -205,19 +205,6 @@ extension ScanTableViewController: CBCentralManagerDelegate {
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
-    
-    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        var msg = "Everything is OK"
-        
-        if error != nil {
-            msg = error!.localizedDescription
-        }
-        
-        let alert = UIAlertController(title: "Payload sent", message: msg, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-
 }
 
 extension ScanTableViewController: CBPeripheralDelegate {
