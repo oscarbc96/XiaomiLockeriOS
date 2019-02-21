@@ -241,10 +241,6 @@ extension ScanTableViewController: CBPeripheralDelegate {
                 let alert = UIAlertController(title: "Characteristic found", message: "Payload sent", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
-            
-                // Disconnect
-                centralManager.cancelPeripheralConnection(peripheral)
-                selectedScooter = nil
                 
                 break
             }
