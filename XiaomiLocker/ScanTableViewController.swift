@@ -77,7 +77,6 @@ class ScanTableViewController: UITableViewController {
         selectedScooter = Array(scooters)[indexPath.row]
         statusBarButton.title = "Connecting..."
         centralManager.connect((selectedScooter?.scooter)!, options: nil)
-        
     }
 
     private func startScanning() {
@@ -102,7 +101,6 @@ class ScanTableViewController: UITableViewController {
         
         if (selectedScooter != nil) {
             centralManager.cancelPeripheralConnection((selectedScooter?.scooter)!)
-            selectedScooter = nil
         }
     }
     
@@ -137,11 +135,12 @@ class ScanTableViewController: UITableViewController {
 
     @IBAction func doRefresh(_ sender: UIRefreshControl) {
         sender.beginRefreshing()
-        if centralManager.isScanning {
-            centralManager?.stopScan()
-        }
+        clean()
+        
         sender.attributedTitle = NSAttributedString(string: "Scanning...")
-        startScanning()
+        if !centralManager.isScanning {
+            startScanning()
+        }
         sender.endRefreshing()
     }
 }
@@ -185,7 +184,6 @@ extension ScanTableViewController: CBCentralManagerDelegate {
                 tableView.reloadData()
                 UIDevice.vibrate()
             }
-            
         }
     }
     
@@ -239,6 +237,8 @@ extension ScanTableViewController: CBPeripheralDelegate {
                 let alert = UIAlertController(title: "Characteristic found", message: "Payload sent", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
+                
+                break
             }
         }
     }
