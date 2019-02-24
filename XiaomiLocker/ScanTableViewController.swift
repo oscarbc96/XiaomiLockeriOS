@@ -37,7 +37,6 @@ class ScanTableViewController: UITableViewController {
     private var scooters = Set<ScooterContainer>()
     private var selectedScooter: ScooterContainer?
     private var selectedPayload = "Lock"
-    private var selectedCharacteristic: CBCharacteristic?
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -87,6 +86,25 @@ class ScanTableViewController: UITableViewController {
         
         centralManager?.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
     }
+
+    private func stopScanning() {
+        self.title = "\(scooters.count) Devices Found"
+        self.scanBarButton.title = "Scan"
+        
+        centralManager?.stopScan()
+    }
+    
+    private func clean() {
+//        stopScanning()
+        
+        scooters.removeAll()
+        tableView.reloadData()
+        
+        if (selectedScooter != nil) {
+            centralManager.cancelPeripheralConnection((selectedScooter?.scooter)!)
+            selectedScooter = nil
+        }
+    }
     
     private func setPayload(alert: UIAlertAction!) {
         selectedPayload = alert.title!
@@ -94,10 +112,8 @@ class ScanTableViewController: UITableViewController {
     }
     
     @IBAction func scanBarButtonAction(_ sender: Any) {
-        if centralManager.isScanning{
-            centralManager?.stopScan()
-            self.title = "\(scooters.count) Devices Found"
-            self.scanBarButton.title = "Scan"
+        if centralManager.isScanning {
+            stopScanning()
         } else {
             startScanning()
         }
@@ -116,11 +132,7 @@ class ScanTableViewController: UITableViewController {
     }
     
     @IBAction func cleanBarButtonAction(_ sender: Any) {
-        statusBarButton.title = "Disconnected"
-        scooters.removeAll()
-        selectedScooter = nil
-        tableView.reloadData()
-        self.title = "\(scooters.count) Devices Found"
+        clean()
     }
 
     @IBAction func doRefresh(_ sender: UIRefreshControl) {
@@ -224,7 +236,6 @@ extension ScanTableViewController: CBPeripheralDelegate {
             if characteristic.uuid == characteristicWrite {
                 peripheral.writeValue(payloads[selectedPayload]!, for: characteristic, type: .withoutResponse)
                 
-                self.selectedCharacteristic = characteristic
                 let alert = UIAlertController(title: "Characteristic found", message: "Payload sent", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
