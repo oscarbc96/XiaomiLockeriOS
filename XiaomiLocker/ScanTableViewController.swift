@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreBluetooth
+import AudioToolbox.AudioServices
 
 struct ScooterContainer: Hashable {
     let scooter: CBPeripheral
@@ -21,62 +22,20 @@ struct ScooterContainer: Hashable {
     }
 }
 
-func randomString(length: Int) -> String {
-    let numbers = "0123456789"
-    return String((0...length-1).map{ _ in numbers.randomElement()! })
-}
-
-//  PAYLOADS
-let LockArray:[UInt8] = Message()
-    .setDirection(newDirection: .MASTER_TO_M365)
-    .setReadOrWrite(readOrWrite: .WRITE)
-    .setPosition(pos: 0x70)
-    .setPayload(singleByteToSend: 0x0001)
-    .build()
-
-let UnlockArray:[UInt8] = Message()
-    .setDirection(newDirection: .MASTER_TO_M365)
-    .setReadOrWrite(readOrWrite: .WRITE)
-    .setPosition(pos: 0x71)
-    .setPayload(singleByteToSend: 0x0001)
-    .build()
-
-let ChangePassArray:[UInt8] = Message()
-    .setDirection(newDirection: .MASTER_TO_M365)
-    .setReadOrWrite(readOrWrite: .WRITE)
-    .setPosition(pos: 0x79)
-    .setPayload(multipleBytesToSend: randomString(length: 6).utf8.map{UInt8($0)})
-    .build()
-
-let TurnOffArray:[UInt8] = Message()
-    .setDirection(newDirection: .MASTER_TO_M365)
-    .setReadOrWrite(readOrWrite: .WRITE)
-    .setPosition(pos: 0x79)
-    .setPayload(singleByteToSend: 0x01)
-    .build()
-
 class ScanTableViewController: UITableViewController {
     
 //  CONSTANTS
     private let characteristicWrite = CBUUID(string: "6e400002-b5a3-f393-e0a9-e50e24dcca9e")
-    private var payloads = [
-        "Lock": Data(bytes: LockArray),
-        "Unlock": Data(bytes: UnlockArray),
-        "Change Password": Data(bytes: ChangePassArray),
-        "Turn Off": Data(bytes: TurnOffArray)
-    ]
     
 //  APP
     @IBOutlet weak var payloadBarButton: UIBarButtonItem!
     @IBOutlet weak var scanBarButton: UIBarButtonItem!
-    @IBOutlet weak var filterBarButton: UIBarButtonItem!
     @IBOutlet weak var cleanBarButton: UIBarButtonItem!
     @IBOutlet weak var statusBarButton: UIBarButtonItem!
     
     private var centralManager: CBCentralManager!
     private var scooters = Set<ScooterContainer>()
     private var selectedScooter: ScooterContainer?
-    private var filtersEnabled = true
     private var selectedPayload = "Lock"
     private var selectedCharacteristic: CBCharacteristic?
     
@@ -90,7 +49,6 @@ class ScanTableViewController: UITableViewController {
         
         payloadBarButton.title = "Payload: \(selectedPayload)"
         scanBarButton.title = "Scan"
-        filterBarButton.title = "Filters: ON"
         cleanBarButton.title = "Clean"
         statusBarButton.title = "Disconnected"
     }
@@ -145,20 +103,6 @@ class ScanTableViewController: UITableViewController {
         }
     }
     
-    @IBAction func filterBarButtonAction(_ sender: Any) {
-        filtersEnabled = !filtersEnabled
-        
-        scooters.removeAll()
-        tableView.reloadData()
-        startScanning()
-        
-        if filtersEnabled {
-            filterBarButton.title = "Filters: ON"
-        } else {
-            filterBarButton.title = "Filters: OFF"
-        }
-    }
-    
     @IBAction func payloadBarButtonAction(_ sender: Any) {
         let alert = UIAlertController(title: "Payload", message: "", preferredStyle: .alert)
         
@@ -201,10 +145,9 @@ extension ScanTableViewController: CBCentralManagerDelegate {
             scooters.removeAll()
             tableView.reloadData()
             
-            let alertView = UIAlertController(title: "Bluetooth Unavailable", message: "Please turn bluetooth on", preferredStyle: .alert)
-            let action = UIAlertAction(title: "OK", style: .default, handler: { (alert) in })
-            alertView.addAction(action)
-            self.present(alertView, animated: true, completion: nil)
+            let alert = UIAlertController(title: "Bluetooth Unavailable", message: "Please turn bluetooth on", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
 
         }
     }
@@ -218,21 +161,19 @@ extension ScanTableViewController: CBCentralManagerDelegate {
             }
         }
         
-        
-        var isScooter = true
-        if filtersEnabled {
-            
-            if let name = peripheral.name {
-                isScooter = name.contains("MIScooter")
-            } else {
-                isScooter = false
-            }
+        var isScooter = false
+        if let name = peripheral.name {
+            isScooter = name.contains("MIScooter")
         }
         
         if isScooter {
             let scooterContainer = ScooterContainer(scooter: peripheral, lastRSSI: RSSI, isConnectable: isConnectable)
-            scooters.insert(scooterContainer)
-            tableView.reloadData()
+            if !scooters.contains(scooterContainer) {
+                scooters.insert(scooterContainer)
+                tableView.reloadData()
+                UIDevice.vibrate()
+            }
+            
         }
     }
     
@@ -249,9 +190,7 @@ extension ScanTableViewController: CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         let alert = UIAlertController(title: "Could not connect", message: self.selectedScooter?.scooter.name, preferredStyle: .alert)
-        let action = UIAlertAction(title: "OK", style: .default, handler: { (alert) in })
-        alert.addAction(action)
-        
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
     
@@ -262,10 +201,9 @@ extension ScanTableViewController: CBCentralManagerDelegate {
             msg = error!.localizedDescription
         }
         
-        let alertView = UIAlertController(title: "Payload sent", message: msg, preferredStyle: .alert)
-        let action = UIAlertAction(title: "OK", style: .default, handler: { (alert) in })
-        alertView.addAction(action)
-        self.present(alertView, animated: true, completion: nil)
+        let alert = UIAlertController(title: "Payload sent", message: msg, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 
 }
@@ -287,11 +225,16 @@ extension ScanTableViewController: CBPeripheralDelegate {
                 peripheral.writeValue(payloads[selectedPayload]!, for: characteristic, type: .withoutResponse)
                 
                 self.selectedCharacteristic = characteristic
-                let alertView = UIAlertController(title: "Characteristic found", message: "Payload sent", preferredStyle: .alert)
-                let action = UIAlertAction(title: "OK", style: .default, handler: { (alert) in })
-                alertView.addAction(action)
-                self.present(alertView, animated: true, completion: nil)
+                let alert = UIAlertController(title: "Characteristic found", message: "Payload sent", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
             }
         }
+    }
+}
+
+extension UIDevice {
+    static func vibrate() {
+        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
     }
 }

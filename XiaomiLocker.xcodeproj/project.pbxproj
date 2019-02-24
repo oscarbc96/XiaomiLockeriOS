@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E5589B9221EF6C500C8B1DC /* Payloads.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E5589B8221EF6C500C8B1DC /* Payloads.swift */; };
 		E0040C6C22155A7300E61EA2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0040C6B22155A7300E61EA2 /* AppDelegate.swift */; };
 		E0040C7122155A7300E61EA2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E0040C6F22155A7300E61EA2 /* Main.storyboard */; };
 		E0040C7322155A7400E61EA2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E0040C7222155A7400E61EA2 /* Assets.xcassets */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8E5589B8221EF6C500C8B1DC /* Payloads.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payloads.swift; sourceTree = "<group>"; };
 		E0040C6822155A7300E61EA2 /* XiaomiLocker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XiaomiLocker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0040C6B22155A7300E61EA2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E0040C7022155A7300E61EA2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -69,6 +71,7 @@
 				E0040C7222155A7400E61EA2 /* Assets.xcassets */,
 				E0040C7422155A7400E61EA2 /* LaunchScreen.storyboard */,
 				E0040C7722155A7400E61EA2 /* Info.plist */,
+				8E5589B8221EF6C500C8B1DC /* Payloads.swift */,
 			);
 			path = XiaomiLocker;
 			sourceTree = "<group>";
@@ -109,7 +112,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 1010;
 				LastUpgradeCheck = 1010;
-				ORGANIZATIONNAME = "Oscar Blanco";
+				ORGANIZATIONNAME = smrpr;
 				TargetAttributes = {
 					E0040C6722155A7300E61EA2 = {
 						CreatedOnToolsVersion = 10.1;
@@ -154,6 +157,7 @@
 			files = (
 				E0040C6C22155A7300E61EA2 /* AppDelegate.swift in Sources */,
 				E0040C7F22155B0000E61EA2 /* Message.swift in Sources */,
+				8E5589B9221EF6C500C8B1DC /* Payloads.swift in Sources */,
 				E0040C8022155B0000E61EA2 /* ScanTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -301,13 +305,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7XPNZVMTQ2;
+				DEVELOPMENT_TEAM = 62WP9XKTMU;
 				INFOPLIST_FILE = XiaomiLocker/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = oscarbc.XiaomiLocker;
+				PRODUCT_BUNDLE_IDENTIFIER = smrpr.XiaomiLocker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -319,13 +323,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7XPNZVMTQ2;
+				DEVELOPMENT_TEAM = 62WP9XKTMU;
 				INFOPLIST_FILE = XiaomiLocker/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = oscarbc.XiaomiLocker;
+				PRODUCT_BUNDLE_IDENTIFIER = smrpr.XiaomiLocker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
