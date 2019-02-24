@@ -30,7 +30,7 @@ let UnlockArray:[UInt8] = Message()
 let ChangePassArray:[UInt8] = Message()
     .setDirection(newDirection: .MASTER_TO_M365)
     .setReadOrWrite(readOrWrite: .WRITE)
-    .setPosition(pos: 0x79)
+    .setPosition(pos: 0x17)
     .setPayload(multipleBytesToSend: randomString(length: 6).utf8.map{UInt8($0)})
     .build()
 
@@ -41,9 +41,25 @@ let TurnOffArray:[UInt8] = Message()
     .setPayload(singleByteToSend: 0x01)
     .build()
 
+let TurnOnLed:[UInt8] = Message()
+    .setDirection(newDirection: .MASTER_TO_M365)
+    .setReadOrWrite(readOrWrite: .WRITE)
+    .setPosition(pos: 0x7d)
+    .setPayload(multipleBytesToSend: [0x02, 0x00])
+    .build()
+
+let TurnOffLed:[UInt8] = Message()
+    .setDirection(newDirection: .MASTER_TO_M365)
+    .setReadOrWrite(readOrWrite: .WRITE)
+    .setPosition(pos: 0x7d)
+    .setPayload(multipleBytesToSend: [0x00, 0x00])
+    .build()
+
 let payloads = [
     "Lock": Data(bytes: LockArray),
     "Unlock": Data(bytes: UnlockArray),
     "Change Password": Data(bytes: ChangePassArray),
-    "Turn Off": Data(bytes: TurnOffArray)
+    "Turn Off": Data(bytes: TurnOffArray),
+    "Turn On Led": Data(bytes: TurnOnLed),
+    "Turn Off Led": Data(bytes: TurnOffLed)
 ]

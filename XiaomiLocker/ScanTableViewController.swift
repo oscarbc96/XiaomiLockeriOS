@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreBluetooth
+import AudioToolbox.AudioServices
 
 struct ScooterContainer: Hashable {
     let scooter: CBPeripheral
@@ -29,14 +30,12 @@ class ScanTableViewController: UITableViewController {
 //  APP
     @IBOutlet weak var payloadBarButton: UIBarButtonItem!
     @IBOutlet weak var scanBarButton: UIBarButtonItem!
-    @IBOutlet weak var filterBarButton: UIBarButtonItem!
     @IBOutlet weak var cleanBarButton: UIBarButtonItem!
     @IBOutlet weak var statusBarButton: UIBarButtonItem!
     
     private var centralManager: CBCentralManager!
     private var scooters = Set<ScooterContainer>()
     private var selectedScooter: ScooterContainer?
-    private var filtersEnabled = true
     private var selectedPayload = "Lock"
     private var selectedCharacteristic: CBCharacteristic?
     
@@ -50,7 +49,6 @@ class ScanTableViewController: UITableViewController {
         
         payloadBarButton.title = "Payload: \(selectedPayload)"
         scanBarButton.title = "Scan"
-        filterBarButton.title = "Filters: ON"
         cleanBarButton.title = "Clean"
         statusBarButton.title = "Disconnected"
     }
@@ -102,20 +100,6 @@ class ScanTableViewController: UITableViewController {
             self.scanBarButton.title = "Scan"
         } else {
             startScanning()
-        }
-    }
-    
-    @IBAction func filterBarButtonAction(_ sender: Any) {
-        filtersEnabled = !filtersEnabled
-        
-        scooters.removeAll()
-        tableView.reloadData()
-        startScanning()
-        
-        if filtersEnabled {
-            filterBarButton.title = "Filters: ON"
-        } else {
-            filterBarButton.title = "Filters: OFF"
         }
     }
     
@@ -177,20 +161,19 @@ extension ScanTableViewController: CBCentralManagerDelegate {
             }
         }
         
-        var isScooter = true
-        if filtersEnabled {
-            
-            if let name = peripheral.name {
-                isScooter = name.contains("MIScooter")
-            } else {
-                isScooter = false
-            }
+        var isScooter = false
+        if let name = peripheral.name {
+            isScooter = name.contains("MIScooter")
         }
         
         if isScooter {
             let scooterContainer = ScooterContainer(scooter: peripheral, lastRSSI: RSSI, isConnectable: isConnectable)
-            scooters.insert(scooterContainer)
-            tableView.reloadData()
+            if !scooters.contains(scooterContainer) {
+                scooters.insert(scooterContainer)
+                tableView.reloadData()
+                UIDevice.vibrate()
+            }
+            
         }
     }
     
@@ -247,5 +230,11 @@ extension ScanTableViewController: CBPeripheralDelegate {
                 self.present(alert, animated: true, completion: nil)
             }
         }
+    }
+}
+
+extension UIDevice {
+    static func vibrate() {
+        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
     }
 }
