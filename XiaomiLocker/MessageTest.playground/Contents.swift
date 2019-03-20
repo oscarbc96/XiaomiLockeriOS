@@ -43,12 +43,10 @@ class Message {
     }
     
     func setPayload(multipleBytesToSend: [UInt8]) -> Message {
-        for byte in multipleBytesToSend {
-            payload.append(byte)
-        }
-        checksum += 3
-        for byte in multipleBytesToSend {
-            checksum += Int(byte)
+        payload.append(contentsOf: multipleBytesToSend)
+        checksum += payload.count + 2
+        payload.forEach {
+            checksum += Int($0)
         }
         return self
     }
@@ -111,7 +109,7 @@ func randomString(length: Int) -> String {
 let ChangePassArray:[UInt8] = Message()
     .setDirection(newDirection: .MASTER_TO_M365)
     .setReadOrWrite(readOrWrite: .WRITE)
-    .setPosition(pos: 0x79)
+    .setPosition(pos: 0x17)
     .setPayload(multipleBytesToSend: randomString(length: 6).utf8.map{UInt8($0)})
     .build()
 print(ChangePassArray)
